@@ -1,0 +1,21 @@
+AddHandler cgi-script .cgi .pl
+Options +FollowSymLinks +ExecCGI
+
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_URI} !=/sdlssite.cgi
+RewriteCond %{REQUEST_URI} !=/index.html
+RewriteCond %{REQUEST_URI} !=/welcome.html
+RewriteCond %{REQUEST_URI} !=/login.html
+RewriteCond %{REQUEST_URI} !=/help.html
+RewriteCond %{REQUEST_URI} !=/insert.php
+RewriteCond %{REQUEST_URI} !=/route.php
+RewriteCond %{REQUEST_URI} !=/loading.gif
+RewriteCond %{REQUEST_URI} !=/coverpic.jpg
+RewriteCond %{REQUEST_URI} !=/_index.js
+RewriteCond %{REQUEST_URI} !=/_welcome.js
+RewriteCond %{REQUEST_URI} !=/favicon.ico
+RewriteCond %{REQUEST_URI} !=/bootstrap(.*)
+RewriteCond %{REQUEST_URI} !=/canvasjs(.*)
+RewriteCond %{REQUEST_URI} !=/datatables(.*)
+RewriteRule ^(.*)$ /sdlssite.cgi [QSA,L,PT]

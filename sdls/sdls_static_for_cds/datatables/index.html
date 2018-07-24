@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<title> SDLS - Substation Data Logging System </title>
+	<script src="bootstrap/js/jquery.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap-login.css" rel="stylesheet">
+
+	<style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .bg {
+            /* The image used */
+            background-image: url("coverpic.jpg");
+
+            /* Full height */
+            height: 100%; 
+
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+    
+	<script language="JavaScript">
+    	/*global localStorage*/
+        /*global $*/
+        /*exported load()*/
+        /*jshint unused:false*/
+        function load() {
+            // alert("Loading");
+            if(localStorage.getItem("login_success") === "true") {
+                window.location.replace("welcome.html");
+            }
+        }
+        
+         $(document).ready(function() {
+            $('#login_form').on('submit', function(e){
+                e.preventDefault();
+                var uname = $("#login_form :input[name=username]")[0].value;
+                var pass = $("#login_form :input[name=password]")[0].value;
+                var loginCheckHttp = new XMLHttpRequest();
+			    var getLatestReadingurl = "https://substationdatalogger-jimsonmathew.c9users.io/pireadingslogger/checkLogin/";
+			    loginCheckHttp.open("POST", getLatestReadingurl, false);
+			    loginCheckHttp.setRequestHeader("Content-type", "application/json");
+			    loginCheckHttp.onreadystatechange = function () { //Call a function when the state changes.
+    				if(loginCheckHttp.readyState!=4)
+    				{
+    				    //checking with server;
+    				}
+    			    else if (loginCheckHttp.readyState==4 && loginCheckHttp.status == 200) {
+    			        var response_msg = JSON.parse(loginCheckHttp.responseText);
+    			        if(response_msg["status"]== "ok"){
+    			            localStorage.setItem("username",uname);
+    			            localStorage.setItem("login_success","true");
+    			            localStorage.setItem("key",response_msg["message"]);
+    			            window.location.replace("welcome.html");
+    			        }
+    			        else{
+    			            alert("Invalid login info");
+    			        }
+    			    }
+    			    else if(loginCheckHttp.readyState==4 && loginCheckHttp.status != 200)
+    			    {
+    			    	alert("Error in Internet Connection");
+    			    }
+    			};
+                var loginCheckParameters = {
+                    "username": uname,
+                    "password":pass
+                };
+                loginCheckHttp.send(JSON.stringify(loginCheckParameters));
+            });
+         });
+	</script>
+</head>
+
+<body> 
+    <script type="text/javascript">/*global load */load();</script>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">SDLS Web interface</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="help.html">Help</a></li>
+            </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="bg" >
+	    <div id = "login_form_class" class="" style="padding-top: 20px;padding-bottom: 20px;margin-bottom: 20px;">
+	    	<div class="" style="padding-top: 15px;">
+		        <form class="form-signin" action="" method="post" id="login_form">       
+                    <center><h3  style="margin-bottom: -2px"><strong>Sign In</strong></h3></center>
+                    <center><h5  style="margin-bottom: 3vh">to continue to SDLS</h5></center>
+                    <input type="text" id="username" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
+                    <input type="password" id="password" class="form-control" name="password" placeholder="Password" required="" style="margin-top: 5px"/>      
+                    <label class="checkbox">
+                    </label>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>   
+                </form>
+            </div>
+        </div>
+	</div>
+  
+</body>
+</html>

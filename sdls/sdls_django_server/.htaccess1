@@ -1,0 +1,7 @@
+AddHandler cgi-script .cgi .pl
+Options +FollowSymLinks +ExecCGI
+
+RewriteEngine On
+RewriteBase /
+RewriteRule ^(.*)admin(.*)$ /sdlssite.cgi [QSA,L,PT]
+RewriteRule ^(.*)pireadingslogger(.*)$ /sdlssite.cgi [QSA,L,PT]
